@@ -1,0 +1,7 @@
+Griffin;Peter;1.1;biology;Hogwarts;5000;Humbolton;2000
+Klein;Nicolas;1.6;informatics;HTWSaar;400;MIT;2100
+Warcken;Christian;1.4;informatics;HTWSaar;200;Harwarts;6000
+Krieger;Julian;2.0;informatics;MIT;2200;HTWSaar;200
+Tatar;Yasin;1.0;informatics;UniversityofCanada;2200;HTWSaar;300
+Potter;Harry;3.0;history;Hogwarts;200;Cambridge;10000
+Weasly;Ginny;1.5;history;Hogwarts;300;Cambridge;12000
