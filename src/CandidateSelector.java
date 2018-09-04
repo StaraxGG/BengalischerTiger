@@ -1,6 +1,4 @@
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -67,7 +65,7 @@ public class CandidateSelector {
     /**
      * Returns all Students with a speicified subject sorted by their scores.
      * @param subject
-     * @return
+     * @return  List containg the results
      */
     public List<Candidate> studentsSortedByScore(String subject){
         return keys.values().stream().filter(c -> c.getSubject().equals(subject))
@@ -75,6 +73,31 @@ public class CandidateSelector {
                                                             .collect(Collectors.toList());
     }
 
+    /**
+     * Returns a List containing all students attenting to the specified university,
+     * sorted first by their score in highschool as a second (lower valued) criteria
+     * the distance to the chosen university.
+     * @param uni
+     * @return  List containg the results
+     */
+    public List<Candidate> studentsSortedBySubjectThenByScore(String uni){
+        return keys.values().stream().filter(c -> c.getUniversityDistances().containsKey(uni))
+                                                .sorted(Comparator.comparing(Candidate::getSubject)
+                                                .thenComparing(Candidate::getScore)
+                                                .thenComparing(c -> c.getUniversityDistances().get(uni)))
+                                                .collect(Collectors.toList());
+    }
+
+    //TODO how to compare ALL Universitys not only the chosen one
+
+    /*public List<Candidate> studentsSortedBySubjectThenByScore2(String uni){
+        return keys.values().stream()
+                .sorted(Comparator.comparing((Candidate c) -> c.getUniversityDistances().)
+                        .thenComparing(Candidate::getSubject)
+                        .thenComparing(Candidate::getScore)
+                        .thenComparing(c -> c.getUniversityDistances().get(uni)))
+                .collect(Collectors.toList());
+    }*/
 
     //TODO how to sort ALL Students but only compare those with the same subject
 

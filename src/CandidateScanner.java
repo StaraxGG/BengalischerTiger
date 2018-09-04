@@ -29,7 +29,7 @@ public class CandidateScanner {
         CandidateScanner myScanner = new CandidateScanner();
         myScanner.start(args);
         CandidateSelector mySelector = new CandidateSelector(myScanner.getCandidates());
-        mySelector.studentsSortedByScore("informatics").stream().forEach(System.out::println);
+        mySelector.studentsSortedBySubjectThenByScore("Hogwarts").stream().forEach(System.out::println);
     }
 
     /**
