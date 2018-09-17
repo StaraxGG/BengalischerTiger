@@ -1,15 +1,13 @@
+import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -31,12 +29,33 @@ public class MainController implements Initializable{
     /* ---------------------------------------- Attributes ---------------------------------------------------------- */
 
     @FXML
-    private ComboBox<String> comboBox;
+    private ListView<String> listView;
 
     @FXML
-    private Label myLabel1;
+    private Button actionButton;
+
+    @FXML
+    private Label lblFirstName;
+
+    @FXML
+    private Label lblLastName;
+
+    @FXML
+    private Label lblScore;
+
+    @FXML
+    private Label lblFirstUni;
+
+    @FXML
+    private Label lblSecondUni;
+
+    @FXML
+    private TextField myField;
 
     private ArrayList<Candidate> candidates;
+
+    private ObservableList<String> obList;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -46,22 +65,43 @@ public class MainController implements Initializable{
         sc.start(arr);
         candidates = new ArrayList<>(sc.getCandidates());
 
-        //fill combobox
+        //fill listView
         List<String> list = candidates.stream().map(Candidate::getLastName).collect(Collectors.toList());
-        ObservableList<String> obList = FXCollections.observableList(list);
-        comboBox.setItems(obList);
+        obList = FXCollections.observableList(list);
+        listView.setItems(obList);
     }
 
-    public void comboChange(ActionEvent event){
-        String lastname = comboBox.getValue();
-        double score = 0;
+    public void listChange(ActionEvent event){
+        ObservableList<String> mylist = listView.getSelectionModel().getSelectedItems();
+        String lastname = mylist.get(0);
         Predicate<Candidate> test = c -> c.getLastName().equals(lastname);
+        Candidate theChosenOne = null;
 
         if(candidates.stream().anyMatch(test)){
-            score = candidates.stream().filter(test).findFirst().get().getScore();
+            theChosenOne = candidates.stream().filter(test).findFirst().get();
+            lblFirstName.setText(theChosenOne.getLastName());
+            lblLastName.setText(theChosenOne.getFirstName());
+            lblScore.setText(Double.toString(theChosenOne.getScore()));
+            ArrayList<String> entrys = new ArrayList<>(theChosenOne.getUniversityDistances().keySet());
+            lblFirstUni.setText(entrys.get(0));
+            lblSecondUni.setText(entrys.get(1));
         }
-        myLabel1.setText(Double.toString(score));
     }
+
+    public void fieldChanged(ActionEvent event){
+        String text = myField.getText();
+        if(!(text.equals(""))){
+            ObservableList<String> newList = obList.stream()
+                    .filter(c -> c.contains(text))
+                    .collect(Collectors.toCollection(FXCollections::observableArrayList));
+            listView.setItems(newList);
+        }
+        else{
+            listView.setItems(obList);
+        }
+    }
+
+
 
     /* ---------------------------------------- Constants ----------------------------------------------------------- */
 
