@@ -1,4 +1,6 @@
 import javafx.beans.Observable;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -69,16 +71,31 @@ public class MainController implements Initializable{
         List<String> list = candidates.stream().map(Candidate::getLastName).collect(Collectors.toList());
         obList = FXCollections.observableList(list);
         listView.setItems(obList);
+
+        listView.getSelectionModel().selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> listChange(new ActionEvent()));
     }
 
+
+    /**
+     * Used to display detailed information of one selected candidate in the listView.
+     * @param event
+     */
     public void listChange(ActionEvent event){
+
+        //Get selected item as lastname String
         ObservableList<String> mylist = listView.getSelectionModel().getSelectedItems();
         String lastname = mylist.get(0);
+
+        //Predicate to filter items by lastname
         Predicate<Candidate> test = c -> c.getLastName().equals(lastname);
         Candidate theChosenOne = null;
 
+        //Find candidate with lastname and fill labels with detailed information
         if(candidates.stream().anyMatch(test)){
             theChosenOne = candidates.stream().filter(test).findFirst().get();
+
+
             lblFirstName.setText(theChosenOne.getLastName());
             lblLastName.setText(theChosenOne.getFirstName());
             lblScore.setText(Double.toString(theChosenOne.getScore()));
@@ -88,6 +105,10 @@ public class MainController implements Initializable{
         }
     }
 
+    /**
+     * Used to filter list by input in the TextFiled
+     * @param event
+     */
     public void fieldChanged(ActionEvent event){
         String text = myField.getText();
         if(!(text.equals(""))){
